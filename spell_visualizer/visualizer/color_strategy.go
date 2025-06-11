@@ -1,7 +1,6 @@
 package visualizer
 
 import (
-	"DnDSpellVisualizer/spell_visualizer"
 	"DnDSpellVisualizer/spell_visualizer/shared"
 )
 
@@ -20,7 +19,7 @@ type ComplexColorStrategy struct{}
 
 func (c ComplexColorStrategy) GetDefs(spell *shared.Spell) (string, string, error) {
 	colors := shared.DamageTypeColors[spell.DamageType]
-	pattern, err := spell_visualizer.GenerateChaoticPattern([]string{colors.Main, colors.Secondary, colors.Tertiary})
+	pattern, err := shared.GenerateChaoticPattern([]string{colors.Main, colors.Secondary, colors.Tertiary})
 	if err != nil {
 		return "", "", err
 	}

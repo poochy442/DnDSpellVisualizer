@@ -2,7 +2,7 @@ package server
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"net/http"
 
 	"DnDSpellVisualizer/spell_visualizer"
@@ -19,11 +19,11 @@ func GetSpellByName(name string) *shared.Spell {
 }
 
 func validateConfig(config *shared.VisualizationConfig) error {
-	if config.DrawStyle != "" && config.DrawStyle != "Classic" && config.DrawStyle != "Curved" && config.DrawStyle != "Linear" {
-		return errors.New("invalid style option")
+	if config.DrawStyle != "" && config.DrawStyle != shared.StyleClassic && config.DrawStyle != shared.StyleCurved && config.DrawStyle != shared.StyleLinear {
+		return fmt.Errorf("invalid draw style: %s", config.DrawStyle)
 	}
-	if config.ColorStyle != "" && config.ColorStyle != "Classic" && config.ColorStyle != "Complex" {
-		return errors.New("invalid color option")
+	if config.ColorStyle != "" && config.ColorStyle != shared.ColorClassic && config.ColorStyle != shared.ColorComplex {
+		return fmt.Errorf("invalid color style: %s", config.ColorStyle)
 	}
 	return nil
 }

@@ -21,8 +21,8 @@ func VisualizeSpell(spell *shared.Spell, config shared.VisualizationConfig) (str
 
 	var drawStrategy DrawStrategy
 	switch config.DrawStyle {
-	case shared.StyleClassic:
 	case "":
+	case shared.StyleClassic:
 		drawStrategy = ClassicDrawStrategy{}
 	default:
 		return "", fmt.Errorf("unsupported draw style: %s", config.DrawStyle)
