@@ -2,7 +2,7 @@ package main
 
 import (
 	"DnDSpellVisualizer/dnd_api"
-	"DnDSpellVisualizer/spell_visualizer"
+	"DnDSpellVisualizer/server"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -38,9 +38,9 @@ func main() {
 func printUsage() {
 	fmt.Println("Usage: main <command>")
 	fmt.Println("Commands:")
-	fmt.Println("  get_skills  - Update the spells.json file")
-	fmt.Println("  run_server  - Run the HTTP server")
-	fmt.Println("  help        - Display this help message")
+	fmt.Println("	update	- Update the spells.json file")
+	fmt.Println("	run		- Run the HTTP server")
+	fmt.Println("	help	- Display this help message")
 }
 
 func getSkills() {
@@ -65,7 +65,7 @@ func getSkills() {
 }
 
 func runServer() {
-	http.HandleFunc("/api/draw-spell", spell_visualizer.GenerateSpellHandler)
+	http.HandleFunc("/api/draw-spell", server.GenerateSpellHandler)
 
 	port := "8080"
 	fmt.Printf("Server is listening on port %s\n", port)
