@@ -1,10 +1,52 @@
-package spell_visualizer
+package shared
 
 import (
 	"fmt"
 	"math"
 	"math/rand"
 )
+
+// Features for spell visualization
+var Features = []string{
+	"0000000000000",
+	"0000000000001",
+	"0000000000011",
+	"0000000000101",
+	"0000000000111",
+	"0000000010001",
+	"0000000010011",
+	"0000000010101",
+	"0000000010111",
+	"0000000100001",
+	"0000000101001",
+	"0000000101111",
+	"0000000110001",
+	"0000000110111",
+	"0000000111011",
+	"0000000111111",
+	"0000001000001",
+}
+
+var DamageTypeColors = map[DamageType]struct {
+	Main      string
+	Secondary string
+	Tertiary  string
+}{
+	NoDamageType: {"#000000", "#808080", "#333333"},
+	Acid:         {"#075800", "#064d00", "#054200"},
+	Bludgeoning:  {"#808080", "#707070", "#606060"},
+	Cold:         {"#3fd0d4", "#37b6ba", "#2f9c9f"},
+	Fire:         {"#ff5a00", "#df4f00", "#bf4400"},
+	Force:        {"#ba38b1", "#a3319b", "#8b2a85"},
+	Lightning:    {"#021CA4", "#021890", "#02157b"},
+	Necrotic:     {"#738022", "#65701e", "#56601a"},
+	Piercing:     {"#808080", "#707070", "#606060"},
+	Poison:       {"#4aa31d", "#418f19", "#387a16"},
+	Psychic:      {"#7a07b0", "#6b069a", "#5c0584"},
+	Radiant:      {"#f5ef42", "#d6d13a", "#b8b332"},
+	Slashing:     {"#808080", "#707070", "#606060"},
+	Thunder:      {"#563bcc", "#4b34b3", "#412c99"},
+}
 
 func GenerateChaoticPattern(colors []string) (string, error) {
 	mainColor := colors[0]
@@ -15,9 +57,6 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 	maxFirstLayer := 20
 	minSecondLayer := 7
 	maxSecondLayer := 13
-
-	maxFirstLayerRotation := 3.0
-	maxSecondLayerRotation := 2.0
 
 	start := `<pattern id="chaoticPattern" patternUnits="userSpaceOnUse" width="100" height="100">`
 	content := fmt.Sprintf(`<rect width="100" height="100" fill="%s" />`, mainColor)
@@ -35,16 +74,16 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 		cy := 50 + dist*math.Sin(angle)
 		radius := rand.Float64()*firstLayerBaseRadius*0.5 + firstLayerBaseRadius*0.5
 		bumpiness := rand.Intn(7) + 13
-		secColor, err := NewColor(secondaryColor)
-		if err != nil {
-			return "", err
-		}
-		rotation := rand.Float64()*2*maxFirstLayerRotation - maxFirstLayerRotation
-		secColorRot := secColor.RotateHSV(rotation)
+		// secColor, err := NewColor(secondaryColor)
+		// if err != nil {
+		// 	return "", err
+		// }
+		// rotation := rand.Float64()*2*maxFirstLayerRotation - maxFirstLayerRotation
+		// secColorRot := secColor.RotateHSV(rotation)
 		firstLayerShapes = append(firstLayerShapes, struct {
 			cx, cy, radius float64
 		}{cx, cy, radius})
-		content += generateSmoothShape(cx, cy, radius, bumpiness, secColorRot.String())
+		content += generateSmoothShape(cx, cy, radius, bumpiness, secondaryColor)
 	}
 
 	for _, parent := range firstLayerShapes {
@@ -57,13 +96,13 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 			cy := parent.cy + dist*math.Sin(angle)
 			radius := rand.Float64()*secondLayerBaseRadius*0.5 + secondLayerBaseRadius*0.5
 			bumpiness := rand.Intn(7) + 13
-			terColor, err := NewColor(tertiaryColor)
-			if err != nil {
-				return "", err
-			}
-			rotation := rand.Float64()*2*maxSecondLayerRotation - maxSecondLayerRotation
-			terColorRot := terColor.RotateHSV(rotation)
-			content += generateSmoothShape(cx, cy, radius, bumpiness, terColorRot.String())
+			// terColor, err := NewColor(tertiaryColor)
+			// if err != nil {
+			// 	return "", err
+			// }
+			// rotation := rand.Float64()*2*maxSecondLayerRotation - maxSecondLayerRotation
+			// terColorRot := terColor.RotateHSV(rotation)
+			content += generateSmoothShape(cx, cy, radius, bumpiness, tertiaryColor)
 		}
 	}
 
