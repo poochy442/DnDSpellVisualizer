@@ -52,11 +52,13 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 	mainColor := colors[0]
 	secondaryColor := colors[1]
 	tertiaryColor := colors[2]
-
-	minFirstLayer := 15
-	maxFirstLayer := 20
-	minSecondLayer := 7
-	maxSecondLayer := 13
+	const (
+		minFirstLayer  = 15
+		maxFirstLayer  = 20
+		minSecondLayer = 7
+		maxSecondLayer = 13
+		baseRadius     = 30.0
+	)
 
 	start := `<pattern id="chaoticPattern" patternUnits="userSpaceOnUse" width="100" height="100">`
 	content := fmt.Sprintf(`<rect width="100" height="100" fill="%s" />`, mainColor)
@@ -66,7 +68,7 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 	}{}
 
 	numFirstLayerShapes := rand.Intn(maxFirstLayer-minFirstLayer+1) + minFirstLayer
-	firstLayerBaseRadius := 30.0 * (float64(minFirstLayer) / float64(numFirstLayerShapes))
+	firstLayerBaseRadius := baseRadius * (float64(minFirstLayer) / float64(numFirstLayerShapes))
 	for i := range numFirstLayerShapes {
 		angle := 2 * math.Pi * float64(i) / float64(numFirstLayerShapes)
 		dist := rand.Float64()*48 + 15
@@ -74,12 +76,6 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 		cy := 50 + dist*math.Sin(angle)
 		radius := rand.Float64()*firstLayerBaseRadius*0.5 + firstLayerBaseRadius*0.5
 		bumpiness := rand.Intn(7) + 13
-		// secColor, err := NewColor(secondaryColor)
-		// if err != nil {
-		// 	return "", err
-		// }
-		// rotation := rand.Float64()*2*maxFirstLayerRotation - maxFirstLayerRotation
-		// secColorRot := secColor.RotateHSV(rotation)
 		firstLayerShapes = append(firstLayerShapes, struct {
 			cx, cy, radius float64
 		}{cx, cy, radius})
@@ -96,12 +92,6 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 			cy := parent.cy + dist*math.Sin(angle)
 			radius := rand.Float64()*secondLayerBaseRadius*0.5 + secondLayerBaseRadius*0.5
 			bumpiness := rand.Intn(7) + 13
-			// terColor, err := NewColor(tertiaryColor)
-			// if err != nil {
-			// 	return "", err
-			// }
-			// rotation := rand.Float64()*2*maxSecondLayerRotation - maxSecondLayerRotation
-			// terColorRot := terColor.RotateHSV(rotation)
 			content += generateSmoothShape(cx, cy, radius, bumpiness, tertiaryColor)
 		}
 	}
@@ -110,6 +100,7 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 	return start + content + end, nil
 }
 
+// generateSmoothShape creates a smooth SVG path for a shape.
 func generateSmoothShape(cx, cy, radius float64, bumpiness int, color string) string {
 	points := make([][2]float64, bumpiness)
 	for i := range bumpiness {
@@ -129,7 +120,7 @@ func generateSmoothShape(cx, cy, radius float64, bumpiness int, color string) st
 		c1x := p1[0] + (p2[0]-p0[0])/6
 		c1y := p1[1] + (p2[1]-p0[1])/6
 		c2x := p2[0] - (p3[0]-p1[0])/6
-		c2y := p2[1] - (p3[1]-p1[1])/6
+		c2y := p2[1] - (p3[0]-p1[1])/6
 		path += fmt.Sprintf("C %f,%f %f,%f %f,%f ", c1x, c1y, c2x, c2y, p2[0], p2[1])
 	}
 	path += "Z"

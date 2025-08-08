@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Color represents a color in HEX, RGB, and HSV formats.
 type Color struct {
 	HEX string
 	RGB RGB
@@ -21,6 +22,7 @@ type HSV struct {
 	H, S, V float64
 }
 
+// NewColor creates a Color from a HEX string.
 func NewColor(hex string) (*Color, error) {
 	r, g, b, err := hexToRGB(hex)
 	if err != nil {
@@ -34,6 +36,7 @@ func NewColor(hex string) (*Color, error) {
 	}, nil
 }
 
+// NewColorFromRGB creates a Color from RGB values.
 func NewColorFromRGB(r, g, b int) *Color {
 	h, s, v := rgbToHSV(r, g, b)
 	return &Color{
@@ -43,6 +46,7 @@ func NewColorFromRGB(r, g, b int) *Color {
 	}
 }
 
+// NewColorFromHSV creates a Color from HSV values.
 func NewColorFromHSV(h, s, v float64) *Color {
 	r, g, b := hsvToRGB(h, s, v)
 	return &Color{
@@ -129,6 +133,7 @@ func hsvToRGB(h, s, v float64) (int, int, int) {
 	return r, g, b
 }
 
+// RotateHSV rotates the color's hue by the given angle.
 func (c *Color) RotateHSV(angle float64) *Color {
 	h := math.Mod(c.HSV.H+angle, 360)
 	if h < 0 {
