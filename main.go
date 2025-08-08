@@ -3,6 +3,7 @@ package main
 import (
 	"DnDSpellVisualizer/dnd_api"
 	"DnDSpellVisualizer/server"
+	"DnDSpellVisualizer/spell_visualizer"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -65,10 +66,17 @@ func getSkills() {
 }
 
 func runServer() {
-	http.HandleFunc("/api/draw-spell", server.GenerateSpellHandler)
+	spells, err := spell_visualizer.LoadSpells()
+	if err != nil {
+		fmt.Printf("Failed to load spells: %v\n", err)
+		fmt.Println("Make sure spells.json exists. Run 'go run main.go update' first.")
+		os.Exit(1)
+	}
+
+	http.HandleFunc("/api/draw-spell", server.DrawSpellHandler(spells))
 
 	port := "8080"
-	fmt.Printf("Server is listening on port %s\n", port)
+	fmt.Printf("Server is listening on localhost:%s\n", port)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)

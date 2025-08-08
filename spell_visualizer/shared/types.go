@@ -290,3 +290,14 @@ func (s *Spell) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
+
+func (vc *VisualizationConfig) UnmarshalJSON(data []byte) error {
+	*vc = VisualizationConfig{
+		Size:       0,
+		DrawStyle:  StyleClassic,
+		ColorStyle: ColorClassic,
+	}
+
+	type rawConfig VisualizationConfig
+	return json.Unmarshal(data, (*rawConfig)(vc))
+}
