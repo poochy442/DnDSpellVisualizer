@@ -6,26 +6,35 @@ import (
 	"strings"
 )
 
+// SkillDuration represents the duration of a spell.
 type SkillDuration int
 
+// School represents the school of magic.
 type School int
 
+// Range represents the range of a spell.
 type Range int
 
+// AreaOfEffect represents the area of effect of a spell.
 type AreaOfEffect int
 
+// DamageType represents the type of damage a spell deals.
 type DamageType int
 
+// DrawStyle represents the drawing style for visualization.
 type DrawStyle string
 
+// ColorStyle represents the color style for visualization.
 type ColorStyle string
 
+// VisualizationConfig holds configuration for spell visualization.
 type VisualizationConfig struct {
 	Size       int        `json:"Size"`
 	DrawStyle  DrawStyle  `json:"DrawStyle"`
 	ColorStyle ColorStyle `json:"ColorStyle"`
 }
 
+// Spell represents a D&D spell.
 type Spell struct {
 	Name         string
 	Description  string
