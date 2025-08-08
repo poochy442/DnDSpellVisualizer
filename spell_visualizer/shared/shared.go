@@ -85,7 +85,7 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 	for _, parent := range firstLayerShapes {
 		numSecondLayerShapes := rand.Intn(maxSecondLayer-minSecondLayer+1) + minSecondLayer
 		secondLayerBaseRadius := parent.radius * (float64(minSecondLayer) / float64(numSecondLayerShapes)) * 0.42
-		for j := range numSecondLayerShapes {
+		for j := 0; j < numSecondLayerShapes; j++ {
 			angle := 2 * math.Pi * float64(j) / float64(numSecondLayerShapes)
 			dist := rand.Float64() * parent.radius * 0.9
 			cx := parent.cx + dist*math.Cos(angle)
@@ -103,7 +103,7 @@ func GenerateChaoticPattern(colors []string) (string, error) {
 // generateSmoothShape creates a smooth SVG path for a shape.
 func generateSmoothShape(cx, cy, radius float64, bumpiness int, color string) string {
 	points := make([][2]float64, bumpiness)
-	for i := range bumpiness {
+	for i := 0; i < bumpiness; i++ {
 		angle := 2 * math.Pi * float64(i) / float64(bumpiness)
 		bumpRadius := radius + rand.Float64()*radius*0.18 - radius*0.09
 		x := cx + bumpRadius*math.Cos(angle)
